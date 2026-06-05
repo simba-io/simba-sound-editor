@@ -36,8 +36,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SoundManager = void 0;
 const EditorView_1 = require("./EditorView");
 const Tone = __importStar(require("tone"));
+const signals_1 = require("signals");
 /** @internal */
 class SoundManager {
+    signal;
     mode;
     anchor;
     editor;
@@ -47,10 +49,16 @@ class SoundManager {
         Tone.start();
         this.mode = mode;
         this.anchor = anchor;
-        if (this.mode === "dev") {
-            this.editor = new EditorView_1.SoundEditor(this.anchor);
-        }
-        console.log("SoundManager initialized");
+        const editorInit = () => {
+            if (this.mode === "dev") {
+                this.editor = new EditorView_1.SoundEditor(this.anchor);
+            }
+        };
+        this.signal = new signals_1.Signal();
+        this.signal.addOnce(editorInit);
+        setTimeout(() => {
+            this.signal.dispatch();
+        }, 5);
     }
 }
 exports.SoundManager = SoundManager;

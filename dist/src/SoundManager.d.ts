@@ -5,6 +5,7 @@ export interface SoundData {
 }
 /** @internal */
 export declare class SoundManager {
+    private signal;
     private mode;
     private anchor;
     private editor;

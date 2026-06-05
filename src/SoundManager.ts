@@ -1,5 +1,6 @@
 import {SoundEditor, UserPanelAnchor} from "./EditorView";
 import * as Tone from "tone";
+import {Signal} from "signals";
 
 export interface SoundData
 {
@@ -10,6 +11,7 @@ export interface SoundData
 /** @internal */
 export class SoundManager
 {
+    private signal!: Signal; 
     private mode!: string;
 
     private anchor!: UserPanelAnchor;
@@ -22,15 +24,27 @@ export class SoundManager
     constructor(mode: "dev" | "prod", anchor: UserPanelAnchor)
     {
         Tone.start();
+
         this.mode = mode;
 
         this.anchor = anchor;
 
-        if (this.mode === "dev")
+        const editorInit = () =>
         {
-            this.editor = new SoundEditor(this.anchor);
-        }
+            if (this.mode === "dev")
+            {
+                this.editor = new SoundEditor(this.anchor);
+            }
+        };
 
-        console.log("SoundManager initialized");
+        this.signal = new Signal();
+
+        this.signal.addOnce(editorInit);
+
+        setTimeout(() =>
+        {
+            this.signal.dispatch();
+        }, 5);
+    
     }
 }

@@ -16,12 +16,16 @@
   "type": "commonjs",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "files": [
     "dist/**/*.js",
-    "dist/**/*.d.ts"
+    "dist/**/*.d.ts",
+    "dist/**/*.css"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node scripts/copy-css.cjs",
     "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -29,6 +33,7 @@
     "@pixi/react": "^8.0.4",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "@types/signals": "^1.0.4",
     "pixi.js": "^8.8.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
