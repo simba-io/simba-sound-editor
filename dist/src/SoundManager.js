@@ -60,6 +60,44 @@ class SoundManager {
             this.signal.dispatch();
         }, 5);
     }
+    load(source) {
+        if (source === undefined) {
+            return this.soundData;
+        }
+        return this.loadSource(source);
+    }
+    async loadSource(source) {
+        const soundData = typeof source === "string"
+            ? await this.fetchSoundData(source)
+            : source;
+        if (!this.isSoundData(soundData)) {
+            throw new Error("Invalid sound data JSON.");
+        }
+        this.soundData = soundData;
+        return this.soundData;
+    }
+    async fetchSoundData(source) {
+        const response = await fetch(source);
+        if (!response.ok) {
+            throw new Error(`Failed to load sound data from ${source}.`);
+        }
+        return response.json();
+    }
+    isSoundData(value) {
+        if (!value || typeof value !== "object") {
+            return false;
+        }
+        const soundData = value;
+        return this.isRecord(soundData.sounds)
+            && this.isRecord(soundData.playContainers)
+            && this.isRecord(soundData.beatSyncContainers)
+            && this.isRecord(soundData.events)
+            && Array.isArray(soundData.groups)
+            && this.isRecord(soundData.channels);
+    }
+    isRecord(value) {
+        return !!value && typeof value === "object" && !Array.isArray(value);
+    }
 }
 exports.SoundManager = SoundManager;
 //# sourceMappingURL=SoundManager.js.map

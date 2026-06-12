@@ -1,8 +1,5 @@
 import { UserPanelAnchor } from "./EditorView";
-export interface SoundData {
-    sounds: Record<string, string>;
-    events: Record<string, string[]>;
-}
+import { SoundData } from "./Types";
 /** @internal */
 export declare class SoundManager {
     private signal;
@@ -12,5 +9,11 @@ export declare class SoundManager {
     private soundData;
     /** @internal */
     constructor(mode: "dev" | "prod", anchor: UserPanelAnchor);
+    load(): SoundData;
+    load(source: string | SoundData): Promise<SoundData>;
+    private loadSource;
+    private fetchSoundData;
+    private isSoundData;
+    private isRecord;
 }
 //# sourceMappingURL=SoundManager.d.ts.map

@@ -16,6 +16,14 @@
   "type": "commonjs",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "sideEffects": [
     "**/*.css"
   ],
@@ -26,21 +34,31 @@
   ],
   "scripts": {
     "build": "tsc && node scripts/copy-css.cjs",
+    "watch:ts": "tsc --watch --preserveWatchOutput",
+    "watch:css": "chokidar \"src/**/*.css\" -c \"node scripts/copy-css.cjs\"",
+    "build:watch": "npm run build && concurrently \"npm run watch:ts\" \"npm run watch:css\"",
+    "prepare": "npm run build",
+    "link:global": "npm run build && npm link",
+    "unlink:global": "npm unlink",
     "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@pixi/react": "^8.0.4",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
     "@types/signals": "^1.0.4",
     "pixi.js": "^8.8.1",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
     "tone": "^15.1.22"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^9.2.1",
     "typescript": "^5.9.3"
   }
 }
